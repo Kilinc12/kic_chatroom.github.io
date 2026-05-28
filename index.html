@@ -1,36 +1,268 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <!-- Chatroom styles via jsDelivr -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/index.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/themes/theme2.css" />
-</head>
-<body>
-  <div class="chat-container"></div>
+  <title>KI Wetterassistent</title>
 
-  <!-- Chatroom script via jsDelivr -->
-  <script src="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.js"></script>
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <script>
-    // Fail-fast hint if the script didn't load
-    if (!window.Chatroom) {
-      document.body.insertAdjacentHTML('beforeend',
-        '<div style="padding:12px;color:#fff;background:#c00">Could not load Chatroom.js</div>');
+  <!-- Chatroom CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.css"/>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
-    var chatroom = new window.Chatroom({
-      host: "https://sturdy-bassoon-6xpwpg4w9xr35x5v-5005.app.github.dev",
-      title: "Chat with a bot",
-      container: document.querySelector(".chat-container"),
-      welcomeMessage: "Nice to meet you.",
-      speechRecognition: "en-US",
-      voiceLang: "en-US"
-    });
-    chatroom.openChat();
-  </script>
+    body{
+      font-family:'Poppins',sans-serif;
+      height:100vh;
+      overflow:hidden;
+
+      background:
+      radial-gradient(circle at top left,#1d2671,#0f0c29 40%),
+      radial-gradient(circle at bottom right,#c33764,#1d2671 50%);
+
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    /* Hintergrund Animation */
+    body::before{
+      content:'';
+      position:absolute;
+      width:200%;
+      height:200%;
+
+      background:
+      linear-gradient(
+        45deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0)
+      );
+
+      animation: moveBg 18s linear infinite;
+    }
+
+    @keyframes moveBg{
+      from{
+        transform:translate(-10%,-10%) rotate(0deg);
+      }
+      to{
+        transform:translate(-10%,-10%) rotate(360deg);
+      }
+    }
+
+    /* Chat Container */
+    .chat-container{
+      position:relative;
+
+      width:420px;
+      height:750px;
+
+      border-radius:30px;
+
+      background:rgba(255,255,255,0.08);
+
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+
+      border:1px solid rgba(255,255,255,0.15);
+
+      box-shadow:
+      0 8px 32px rgba(0,0,0,0.35),
+      0 0 40px rgba(0,255,255,0.15);
+
+      overflow:hidden;
+
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float{
+      0%{
+        transform:translateY(0px);
+      }
+      50%{
+        transform:translateY(-10px);
+      }
+      100%{
+        transform:translateY(0px);
+      }
+    }
+
+    /* Header */
+    .chat-container::before{
+      content:"KI WETTERASSISTENT";
+
+      position:absolute;
+      top:0;
+      left:0;
+
+      width:100%;
+      padding:22px;
+
+      text-align:center;
+
+      font-size:18px;
+      font-weight:600;
+
+      letter-spacing:2px;
+
+      color:white;
+
+      background:linear-gradient(
+        90deg,
+        rgba(0,255,255,0.2),
+        rgba(255,255,255,0.05)
+      );
+
+      border-bottom:1px solid rgba(255,255,255,0.1);
+
+      z-index:1000;
+    }
+
+    /* Chatroom */
+    .chatroom{
+      margin-top:70px !important;
+      background:transparent !important;
+    }
+
+    .chatroom .messages{
+      padding:20px !important;
+    }
+
+    /* Bot Nachrichten */
+    .chatroom .message.left .bubble{
+      background:rgba(255,255,255,0.12) !important;
+
+      color:white !important;
+
+      border:1px solid rgba(255,255,255,0.08);
+
+      backdrop-filter:blur(10px);
+
+      border-radius:18px 18px 18px 5px !important;
+
+      box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Benutzer Nachrichten */
+    .chatroom .message.right .bubble{
+      background:linear-gradient(
+        135deg,
+        #00dbde,
+        #fc00ff
+      ) !important;
+
+      color:white !important;
+
+      border-radius:18px 18px 5px 18px !important;
+
+      box-shadow:
+      0 4px 20px rgba(252,0,255,0.35);
+    }
+
+    /* Eingabebereich */
+    .chatroom .input{
+      background:rgba(255,255,255,0.06) !important;
+
+      backdrop-filter:blur(12px);
+
+      border-top:1px solid rgba(255,255,255,0.08);
+
+      padding:15px !important;
+    }
+
+    /* Textfeld */
+    .chatroom input{
+      background:rgba(255,255,255,0.08) !important;
+
+      border:none !important;
+
+      color:white !important;
+
+      border-radius:14px !important;
+
+      padding:14px !important;
+
+      font-size:15px;
+    }
+
+    .chatroom input::placeholder{
+      color:rgba(255,255,255,0.5);
+    }
+
+    /* Senden Button */
+    .chatroom .send{
+      background:linear-gradient(
+        135deg,
+        #00dbde,
+        #fc00ff
+      ) !important;
+
+      border:none !important;
+
+      border-radius:14px !important;
+
+      transition:0.3s;
+    }
+
+    .chatroom .send:hover{
+      transform:scale(1.08);
+
+      box-shadow:
+      0 0 18px rgba(255,255,255,0.35);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar{
+      width:6px;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,0.2);
+      border-radius:10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="chat-container"></div>
+
+<!-- Chatroom Script -->
+<script src="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.js"></script>
+
+<script>
+
+  var chatroom = new window.Chatroom({
+
+    host: "https://urban-halibut-r4jw49wq7gv7fw545-5005.app.github.dev",
+
+    title: "KI Wetterassistent",
+
+    container: document.querySelector(".chat-container"),
+
+    speechRecognition: "de-DE",
+
+    welcomeMessage:
+      "👋 Hey! Ich bin dein KI-Wetterassistent. Was möchtest du wissen?",
+
+  });
+
+  chatroom.openChat();
+
+</script>
+
 </body>
 </html>
