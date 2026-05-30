@@ -1,350 +1,189 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <title>KI Reise- & Wetterassistent</title>
-
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Chatroom CSS -->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.css"/>
-
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    body{
-      font-family:'Poppins',sans-serif;
-      min-height:100vh;
-      overflow:hidden;
-
-      background:
-        radial-gradient(circle at top left, #ffffff 0%, #faf5ff 35%, #f3e8ff 65%),
-        radial-gradient(circle at bottom right, #e9d5ff 0%, #ffffff 60%);
-
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:24px;
-    }
-
-    /* Heller, dezenter Hintergrundeffekt */
-    body::before{
-      content:'';
-      position:absolute;
-      width:200%;
-      height:200%;
-
-      background:
-        linear-gradient(
-          45deg,
-          rgba(168,85,247,0.10),
-          rgba(255,255,255,0),
-          rgba(216,180,254,0.12)
-        );
-
-      animation: moveBg 18s linear infinite;
-      z-index:0;
-    }
-
-    @keyframes moveBg{
-      from{
-        transform:translate(-10%,-10%) rotate(0deg);
-      }
-      to{
-        transform:translate(-10%,-10%) rotate(360deg);
-      }
-    }
-
-    /* Chat Container */
-    .chat-container{
-      position:relative;
-      z-index:1;
-
-      width:min(92vw, 700px);
-      height:min(92vh, 900px);
-
-      border-radius:44px;
-
-      background:rgba(255,255,255,0.84);
-
-      backdrop-filter:blur(20px);
-      -webkit-backdrop-filter:blur(20px);
-
-      border:1px solid rgba(168,85,247,0.20);
-
-      box-shadow:
-        0 22px 65px rgba(126,34,206,0.16),
-        0 8px 26px rgba(168,85,247,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.85);
-
-      overflow:hidden;
-
-      animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float{
-      0%{
-        transform:translateY(0px);
-      }
-      50%{
-        transform:translateY(-8px);
-      }
-      100%{
-        transform:translateY(0px);
-      }
-    }
-
-    /* Header */
-    .chat-container::before{
-      content:"🌤️ KI REISE- & WETTERASSISTENT 🗺️";
-
-      position:absolute;
-      top:0;
-      left:0;
-
-      width:100%;
-      padding:24px 20px 12px;
-
-      text-align:center;
-
-      font-size:19px;
-      font-weight:700;
-
-      letter-spacing:1.2px;
-
-      color:#581c87;
-
-      background:linear-gradient(
-        90deg,
-        #ffffff,
-        #faf5ff,
-        #f3e8ff,
-        #ffffff
-      );
-
-      border-bottom:1px solid rgba(168,85,247,0.18);
-      border-radius:44px 44px 0 0;
-
-      z-index:1000;
-    }
-
-    /* Icon-Zeile statt schwarzer Unterüberschrift */
-    .chat-container::after{
-      content:"🌦️ Wetterdaten   •   📍 Ortsinfos   •   🏛️ Sehenswürdigkeiten";
-
-      position:absolute;
-      top:55px;
-      left:0;
-
-      width:100%;
-      padding:0 20px 14px;
-
-      text-align:center;
-
-      font-size:13px;
-      font-weight:500;
-
-      color:#7e22ce;
-
-      background:linear-gradient(
-        90deg,
-        #ffffff,
-        #faf5ff,
-        #f3e8ff,
-        #ffffff
-      );
-
-      border-bottom:1px solid rgba(168,85,247,0.12);
-
-      z-index:1000;
-    }
-
-    /* Chatroom */
-    .chatroom{
-      margin-top:98px !important;
-      background:transparent !important;
-      height:calc(100% - 98px) !important;
-    }
-
-    .chatroom .messages{
-      padding:26px !important;
-    }
-
-    /* Bot Nachrichten */
-    .chatroom .message.left .bubble{
-      background:rgba(255,255,255,0.94) !important;
-
-      color:#3b0764 !important;
-
-      border:1px solid rgba(168,85,247,0.18);
-
-      backdrop-filter:blur(10px);
-
-      border-radius:26px 26px 26px 10px !important;
-
-      box-shadow:
-        0 6px 20px rgba(126,34,206,0.10),
-        inset 0 1px 0 rgba(255,255,255,0.85);
-    }
-
-    /* Benutzer Nachrichten */
-    .chatroom .message.right .bubble{
-      background:linear-gradient(
-        135deg,
-        #a855f7,
-        #d946ef
-      ) !important;
-
-      color:white !important;
-
-      border-radius:26px 26px 10px 26px !important;
-
-      box-shadow:
-        0 6px 22px rgba(168,85,247,0.30);
-    }
-
-    /* Eingabebereich */
-    .chatroom .input{
-      background:rgba(255,255,255,0.88) !important;
-
-      backdrop-filter:blur(14px);
-
-      border-top:1px solid rgba(168,85,247,0.18);
-
-      padding:18px !important;
-    }
-
-    /* Textfeld */
-    .chatroom input{
-      background:rgba(255,255,255,0.98) !important;
-
-      border:1px solid rgba(168,85,247,0.25) !important;
-
-      color:#3b0764 !important;
-
-      border-radius:22px !important;
-
-      padding:18px !important;
-
-      font-size:16px;
-      outline:none !important;
-    }
-
-    .chatroom input:focus{
-      border-color:rgba(168,85,247,0.55) !important;
-      box-shadow:0 0 0 4px rgba(168,85,247,0.10);
-    }
-
-    .chatroom input::placeholder{
-      color:rgba(88,28,135,0.48);
-    }
-
-    /* Senden Button */
-    .chatroom .send{
-      background:linear-gradient(
-        135deg,
-        #a855f7,
-        #d946ef
-      ) !important;
-
-      border:none !important;
-
-      border-radius:22px !important;
-
-      transition:0.3s;
-      box-shadow:0 6px 18px rgba(168,85,247,0.28);
-    }
-
-    .chatroom .send:hover{
-      transform:scale(1.06);
-
-      box-shadow:
-        0 0 22px rgba(168,85,247,0.42);
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar{
-      width:7px;
-    }
-
-    ::-webkit-scrollbar-thumb{
-      background:rgba(168,85,247,0.32);
-      border-radius:12px;
-    }
-
-    ::-webkit-scrollbar-track{
-      background:rgba(255,255,255,0.35);
-    }
-
-    /* Mobile Optimierung */
-    @media(max-width:600px){
-      body{
-        padding:12px;
-      }
-
-      .chat-container{
-        width:100%;
-        height:94vh;
-        border-radius:32px;
-      }
-
-      .chat-container::before{
-        font-size:15px;
-        padding:20px 12px 10px;
-        border-radius:32px 32px 0 0;
-      }
-
-      .chat-container::after{
-        top:48px;
-        font-size:11px;
-        padding:0 10px 12px;
-      }
-
-      .chatroom{
-        margin-top:88px !important;
-        height:calc(100% - 88px) !important;
-      }
-
-      .chatroom .messages{
-        padding:18px !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelMate AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.css"/>
+
+<style>
+:root{
+  --primary:#9333ea;
+  --accent:#d946ef;
+  --dark:#3b0764;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#ffffff,#f3e8ff,#e9d5ff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.app-container{
+  width:min(95vw,900px);
+  height:95vh;
+  background:rgba(255,255,255,0.92);
+  border:1px solid rgba(147,51,234,.2);
+  box-shadow:0 20px 60px rgba(147,51,234,.15);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Feste sichtbare Überschrift */
+.custom-header{
+  height:105px;
+  min-height:105px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 32px;
+  background:linear-gradient(135deg,#9333ea,#c084fc,#d946ef);
+  color:white;
+  border-radius:0;
+  z-index:9999;
+}
+
+.logo-area h1{
+  font-size:30px;
+  font-weight:700;
+  line-height:1.1;
+}
+
+.logo-area p{
+  font-size:14px;
+  margin-top:8px;
+  font-weight:500;
+}
+
+.header-smiley{
+  font-size:34px;
+}
+
+.chat-box{
+  flex:1;
+  min-height:0;
+  background:transparent;
+}
+
+/* Dunkle Standard-Überschrift der Chatroom-Bibliothek entfernen */
+.chatroom .chat-header,
+.chatroom .header,
+.chatroom .titlebar,
+.chatroom h1,
+.chatroom h2{
+  display:none !important;
+}
+
+.chatroom{
+  height:100% !important;
+  margin-top:0 !important;
+  background:transparent !important;
+}
+
+.chatroom .messages{
+  padding:24px !important;
+}
+
+.chatroom .message.left .bubble{
+  background:rgba(255,255,255,0.96) !important;
+  color:var(--dark) !important;
+  border:1px solid rgba(147,51,234,.18);
+  border-radius:0 !important;
+  box-shadow:0 6px 18px rgba(147,51,234,.08);
+}
+
+.chatroom .message.right .bubble{
+  background:linear-gradient(135deg,#9333ea,#d946ef) !important;
+  color:white !important;
+  border-radius:0 !important;
+}
+
+.chatroom .input{
+  background:rgba(255,255,255,0.92) !important;
+  border-top:1px solid rgba(147,51,234,.18);
+  padding:18px !important;
+}
+
+.chatroom input{
+  border:1px solid rgba(147,51,234,.25) !important;
+  color:var(--dark) !important;
+  border-radius:0 !important;
+  padding:16px !important;
+  font-size:16px;
+}
+
+.chatroom .send{
+  background:linear-gradient(135deg,#9333ea,#d946ef) !important;
+  border-radius:0 !important;
+}
+
+@media(max-width:600px){
+  .app-container{
+    width:100%;
+    height:100vh;
+  }
+
+  .custom-header{
+    height:95px;
+    min-height:95px;
+    padding:18px;
+  }
+
+  .logo-area h1{
+    font-size:22px;
+  }
+
+  .logo-area p{
+    font-size:12px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<div class="chat-container"></div>
+<div class="app-container">
 
-<!-- Chatroom Script -->
+  <div class="custom-header">
+    <div class="logo-area">
+      <h1>🌍 TravelMate AI</h1>
+      <p>📍 Orte • 🏛️ Sehenswürdigkeiten • 🌦️ Wetter</p>
+    </div>
+
+    <div class="header-smiley">😊</div>
+  </div>
+
+  <div class="chat-box"></div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.js"></script>
 
 <script>
-  var chatroom = new window.Chatroom({
+var chatroom = new window.Chatroom({
+  host: "https://urban-halibut-r4jw49wq7gv7fw545-5005.app.github.dev",
+  title: "Chatbot",
+  container: document.querySelector(".chat-box"),
+  speechRecognition: "de-DE",
+  welcomeMessage:
+  "😊 Hallo! Ich bin TravelMate AI. Ich helfe dir mit Wetterdaten, Sehenswürdigkeiten und Ortsinformationen."
+});
 
-    host: "https://urban-halibut-r4jw49wq7gv7fw545-5005.app.github.dev",
-
-    title: "KI Reise- & Wetterassistentchat",
-
-    container: document.querySelector(".chat-container"),
-
-    speechRecognition: "de-DE",
-
-    welcomeMessage:
-      "😊 Hallo! Welche Informationen brauchst du?.",
-
-  });
-
-  chatroom.openChat();
+chatroom.openChat();
 </script>
 
 </body>
