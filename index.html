@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>KI Wetterassistent</title>
+  <title>KI Reise- & Wetterassistent</title>
 
   <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,6 @@
         href="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.css"/>
 
   <style>
-
     *{
       margin:0;
       padding:0;
@@ -24,19 +23,20 @@
 
     body{
       font-family:'Poppins',sans-serif;
-      height:100vh;
+      min-height:100vh;
       overflow:hidden;
 
       background:
-      radial-gradient(circle at top left,#1d2671,#0f0c29 40%),
-      radial-gradient(circle at bottom right,#c33764,#1d2671 50%);
+        radial-gradient(circle at top left, #ffffff 0%, #faf5ff 35%, #f3e8ff 65%),
+        radial-gradient(circle at bottom right, #e9d5ff 0%, #ffffff 60%);
 
       display:flex;
       justify-content:center;
       align-items:center;
+      padding:24px;
     }
 
-    /* Hintergrund Animation */
+    /* Heller, dezenter Hintergrundeffekt */
     body::before{
       content:'';
       position:absolute;
@@ -44,13 +44,15 @@
       height:200%;
 
       background:
-      linear-gradient(
-        45deg,
-        rgba(255,255,255,0.03),
-        rgba(255,255,255,0)
-      );
+        linear-gradient(
+          45deg,
+          rgba(168,85,247,0.10),
+          rgba(255,255,255,0),
+          rgba(216,180,254,0.12)
+        );
 
       animation: moveBg 18s linear infinite;
+      z-index:0;
     }
 
     @keyframes moveBg{
@@ -65,22 +67,24 @@
     /* Chat Container */
     .chat-container{
       position:relative;
+      z-index:1;
 
-      width:420px;
-      height:750px;
+      width:min(92vw, 700px);
+      height:min(92vh, 900px);
 
-      border-radius:30px;
+      border-radius:44px;
 
-      background:rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.84);
 
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
 
-      border:1px solid rgba(255,255,255,0.15);
+      border:1px solid rgba(168,85,247,0.20);
 
       box-shadow:
-      0 8px 32px rgba(0,0,0,0.35),
-      0 0 40px rgba(0,255,255,0.15);
+        0 22px 65px rgba(126,34,206,0.16),
+        0 8px 26px rgba(168,85,247,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.85);
 
       overflow:hidden;
 
@@ -92,7 +96,7 @@
         transform:translateY(0px);
       }
       50%{
-        transform:translateY(-10px);
+        transform:translateY(-8px);
       }
       100%{
         transform:translateY(0px);
@@ -101,138 +105,219 @@
 
     /* Header */
     .chat-container::before{
-      content:"KI WETTERASSISTENT";
+      content:"🌤️ KI REISE- & WETTERASSISTENT 🗺️";
 
       position:absolute;
       top:0;
       left:0;
 
       width:100%;
-      padding:22px;
+      padding:24px 20px 12px;
 
       text-align:center;
 
-      font-size:18px;
-      font-weight:600;
+      font-size:19px;
+      font-weight:700;
 
-      letter-spacing:2px;
+      letter-spacing:1.2px;
 
-      color:white;
+      color:#581c87;
 
       background:linear-gradient(
         90deg,
-        rgba(0,255,255,0.2),
-        rgba(255,255,255,0.05)
+        #ffffff,
+        #faf5ff,
+        #f3e8ff,
+        #ffffff
       );
 
-      border-bottom:1px solid rgba(255,255,255,0.1);
+      border-bottom:1px solid rgba(168,85,247,0.18);
+      border-radius:44px 44px 0 0;
+
+      z-index:1000;
+    }
+
+    /* Icon-Zeile statt schwarzer Unterüberschrift */
+    .chat-container::after{
+      content:"🌦️ Wetterdaten   •   📍 Ortsinfos   •   🏛️ Sehenswürdigkeiten";
+
+      position:absolute;
+      top:55px;
+      left:0;
+
+      width:100%;
+      padding:0 20px 14px;
+
+      text-align:center;
+
+      font-size:13px;
+      font-weight:500;
+
+      color:#7e22ce;
+
+      background:linear-gradient(
+        90deg,
+        #ffffff,
+        #faf5ff,
+        #f3e8ff,
+        #ffffff
+      );
+
+      border-bottom:1px solid rgba(168,85,247,0.12);
 
       z-index:1000;
     }
 
     /* Chatroom */
     .chatroom{
-      margin-top:70px !important;
+      margin-top:98px !important;
       background:transparent !important;
+      height:calc(100% - 98px) !important;
     }
 
     .chatroom .messages{
-      padding:20px !important;
+      padding:26px !important;
     }
 
     /* Bot Nachrichten */
     .chatroom .message.left .bubble{
-      background:rgba(255,255,255,0.12) !important;
+      background:rgba(255,255,255,0.94) !important;
 
-      color:white !important;
+      color:#3b0764 !important;
 
-      border:1px solid rgba(255,255,255,0.08);
+      border:1px solid rgba(168,85,247,0.18);
 
       backdrop-filter:blur(10px);
 
-      border-radius:18px 18px 18px 5px !important;
+      border-radius:26px 26px 26px 10px !important;
 
-      box-shadow:0 4px 20px rgba(0,0,0,0.2);
+      box-shadow:
+        0 6px 20px rgba(126,34,206,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.85);
     }
 
     /* Benutzer Nachrichten */
     .chatroom .message.right .bubble{
       background:linear-gradient(
         135deg,
-        #00dbde,
-        #fc00ff
+        #a855f7,
+        #d946ef
       ) !important;
 
       color:white !important;
 
-      border-radius:18px 18px 5px 18px !important;
+      border-radius:26px 26px 10px 26px !important;
 
       box-shadow:
-      0 4px 20px rgba(252,0,255,0.35);
+        0 6px 22px rgba(168,85,247,0.30);
     }
 
     /* Eingabebereich */
     .chatroom .input{
-      background:rgba(255,255,255,0.06) !important;
+      background:rgba(255,255,255,0.88) !important;
 
-      backdrop-filter:blur(12px);
+      backdrop-filter:blur(14px);
 
-      border-top:1px solid rgba(255,255,255,0.08);
+      border-top:1px solid rgba(168,85,247,0.18);
 
-      padding:15px !important;
+      padding:18px !important;
     }
 
     /* Textfeld */
     .chatroom input{
-      background:rgba(255,255,255,0.08) !important;
+      background:rgba(255,255,255,0.98) !important;
 
-      border:none !important;
+      border:1px solid rgba(168,85,247,0.25) !important;
 
-      color:white !important;
+      color:#3b0764 !important;
 
-      border-radius:14px !important;
+      border-radius:22px !important;
 
-      padding:14px !important;
+      padding:18px !important;
 
-      font-size:15px;
+      font-size:16px;
+      outline:none !important;
+    }
+
+    .chatroom input:focus{
+      border-color:rgba(168,85,247,0.55) !important;
+      box-shadow:0 0 0 4px rgba(168,85,247,0.10);
     }
 
     .chatroom input::placeholder{
-      color:rgba(255,255,255,0.5);
+      color:rgba(88,28,135,0.48);
     }
 
     /* Senden Button */
     .chatroom .send{
       background:linear-gradient(
         135deg,
-        #00dbde,
-        #fc00ff
+        #a855f7,
+        #d946ef
       ) !important;
 
       border:none !important;
 
-      border-radius:14px !important;
+      border-radius:22px !important;
 
       transition:0.3s;
+      box-shadow:0 6px 18px rgba(168,85,247,0.28);
     }
 
     .chatroom .send:hover{
-      transform:scale(1.08);
+      transform:scale(1.06);
 
       box-shadow:
-      0 0 18px rgba(255,255,255,0.35);
+        0 0 22px rgba(168,85,247,0.42);
     }
 
     /* Scrollbar */
     ::-webkit-scrollbar{
-      width:6px;
+      width:7px;
     }
 
     ::-webkit-scrollbar-thumb{
-      background:rgba(255,255,255,0.2);
-      border-radius:10px;
+      background:rgba(168,85,247,0.32);
+      border-radius:12px;
     }
 
+    ::-webkit-scrollbar-track{
+      background:rgba(255,255,255,0.35);
+    }
+
+    /* Mobile Optimierung */
+    @media(max-width:600px){
+      body{
+        padding:12px;
+      }
+
+      .chat-container{
+        width:100%;
+        height:94vh;
+        border-radius:32px;
+      }
+
+      .chat-container::before{
+        font-size:15px;
+        padding:20px 12px 10px;
+        border-radius:32px 32px 0 0;
+      }
+
+      .chat-container::after{
+        top:48px;
+        font-size:11px;
+        padding:0 10px 12px;
+      }
+
+      .chatroom{
+        margin-top:88px !important;
+        height:calc(100% - 88px) !important;
+      }
+
+      .chatroom .messages{
+        padding:18px !important;
+      }
+    }
   </style>
 </head>
 
@@ -244,26 +329,21 @@
 <script src="https://cdn.jsdelivr.net/gh/weberi/chatroom@master/dist/Chatroom.js"></script>
 
 <script>
-
   var chatroom = new window.Chatroom({
 
     host: "https://urban-halibut-r4jw49wq7gv7fw545-5005.app.github.dev",
-
-    title: "KI Wetterguru",
 
     container: document.querySelector(".chat-container"),
 
     speechRecognition: "de-DE",
 
     welcomeMessage:
-      "👋 Hi! Ich bin dein KI-Wetterassistent.",
+      "😊 Hallo! Ich bin dein KI Reise- & Wetterassistent. Ich helfe dir mit Wetterdaten, Sehenswürdigkeiten und Ortsinformationen.",
 
   });
 
   chatroom.openChat();
-
 </script>
 
 </body>
 </html>
-
